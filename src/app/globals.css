@@ -25,3 +25,10 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.auo {
+  width: 47%;
+}
+.qwe {
+  max-width: 45px;
+}
