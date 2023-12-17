@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: false,
   // experimental: {
   //   appDir: true,
   // },
@@ -7,7 +8,7 @@ const nextConfig = {
   // output: "export",
   // images: {
   //   loader: "custom",
-  //   loaderFile: './ImageLoader.js'
+  //   loaderFile: './imageLoader.js'
   // },
 }
 

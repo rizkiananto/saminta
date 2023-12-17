@@ -4,7 +4,7 @@ const Header = () => {
   return (
     <div className=" p-6 flex justify-end gap-x-4">
       <Button
-        label="Login"
+        label="Login ke Antrian"
         type="primary" />
       <Button
         label="Register"
