@@ -1,8 +1,14 @@
-
-import { Fira_Sans, Lilita_One } from 'next/font/google'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation';
+import { Lilita_One, Fira_Sans } from 'next/font/google'
+import { BaseTemplate } from '@/templates/BaseTemplate'
 import Link from 'next/link'
+import {
+  Input, Button,
+  Card,
+  CardBody, CardHeader
+} from "@nextui-org/react";
+import { createClient } from '@supabase/supabase-js'
+import { cookies } from 'next/headers';
 
 const lilita_one = Lilita_One({
   weight: '400',
@@ -10,46 +16,58 @@ const lilita_one = Lilita_One({
   display: 'swap'
 })
 
-const firasans = Fira_Sans({
+const fira_sans = Fira_Sans({
   weight: '400',
   subsets: ['latin'],
   display: 'swap'
 })
 
-export default function CheckoutPage () {
+const LoginSection = () => {
   return (
-    <div className="h-screen w-screen bg-black text-white overflow-auto p-10">
-      <div className="flex flex-col  justify-center">
-        <div className='flex flex-wrap justify-center items-end mb-10 gap-x-3'>
-          <h1 className={`${lilita_one.className} text-white text-center text-3xl`}>Login</h1>
-          <Link href='/'>(back)</Link>
+    <div className={`${fira_sans.className} text-white text-xl`}>
+      <p className='text-center font-bold text-2xl mb-8'>Login</p>
+      <form action="/auth/login" method="post">
+        <div className='flex gap-4'>
+          <Input
+            type="text"
+            label="Email"
+            className="max-w-xs"
+            name="email"
+          />
+          <Input
+            type="text"
+            label="Password"
+            className="max-w-xs"
+            name="password"
+          />
         </div>
-        <div className='flex justify-center'>
-        <div className='bg-gray-900 w-full md:max-w-md md:w-2/3 px-10 py-8 rounded-lg flex flex-col mb-3'>
-          <form>
-            <div className='flex flex-col md:flex-row md:items-center mb-14'>
-              <p className='md:md:w-44 md:mb-0 mb-1'>Email</p>
-              <input 
-                className='text-black w-full px-3 py-2 rounded-lg bg-gray-200' 
-                type="text" 
-                name="field-name"
-                placeholder="someone@gmail.com" />
-            </div>
-            <div className='flex flex-col md:flex-row md:items-center mb-14'>
-                <p className='md:w-44 md:mb-0 mb-1'>Password</p>
-                <input 
-                  className='text-black w-full px-3 py-2 rounded-lg bg-gray-200' 
-                  type="text" 
-                  name="field-name"
-                  placeholder='3' />
-              </div>
-            <div className='text-center'>
-              <button className='px-10 py-3 rounded-lg bg-green-800 font-bold'>Login</button>
-            </div>
-          </form>
+        <div className='text-center mt-10'>
+          <Button type="submit" color='primary' className=''>Submit</Button>
         </div>
+      </form>
+    </div>  
+  )
+}
+
+export default function Home() {
+  return (
+    <BaseTemplate>
+      <div className='flex flex-col gap-5 px-8 py-10'>
+        <div className='flex flex-col items-start justify-start'>
+          <div className='flex justify-center items-center gap-2'>
+          <Image
+            height={40}
+            width={40}
+            src={'/image1.png'}
+            alt='icon' />
+          <h1 className={`${lilita_one.className} text-white text-xl`}>SAMINTA.COM</h1>
+          </div>
+          <p className='text-gray-400 text-sm'>Donate. Request. Have Fun!</p>
+        </div>
+        <div className='mt-8'>
+          <LoginSection />
         </div>
       </div>
-    </div>
+    </BaseTemplate>
   )
-};
+}
