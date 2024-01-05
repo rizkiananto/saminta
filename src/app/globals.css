@@ -57,3 +57,9 @@ body {
 .ma-green {
   background-color: #305e68;
 }
+.help-tutorial li {
+  margin-bottom: 25px;
+}
+.w-inherit {
+  width: inherit;
+}

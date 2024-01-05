@@ -70,7 +70,7 @@ const PlayerScreen = () => {
       <div className="mt-10 flex flex-wrap gap-4">
         {players ? players.map((player:any, i:number) => {
           return (
-            <Card className="grow bg-gradient-to-r from-zinc-700 via-zinc-600 to-zinc-500 text-white px-4 py-2 shadow-xl shadow-gray-700">
+            <Card key={i} className="grow bg-gradient-to-r from-zinc-700 via-zinc-600 to-zinc-500 text-white px-4 py-2 shadow-xl shadow-gray-700">
               <div className="max-w-1">
                 <p className="text-lg font-bold">{player.game_nickname}</p>
                 <p className="text-sm font-semibold mb-1">{player.game_id}</p>

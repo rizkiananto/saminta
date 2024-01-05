@@ -25,7 +25,7 @@ export default function RootLayout({
                 <div className="h-full relative flex flex-col justify-center pt-8 pb-28 px-6 overflow-hidden ">
                   {children}
                 </div>
-                <div className='absolute bottom-0 w-full'>
+                <div className='fixed bottom-0 w-inherit'>
                   <BottomNavigation />
                 </div>
               </div>
