@@ -21,7 +21,7 @@ export default function RootLayout({
         <Providers>
           <main>
             <div className={`w-full flex align-center items-center justify-center`}>
-              <div className="relative h-screen w-full sm:w-4/6 xl:max-w-2xl bg-stone-800 text-white">
+              <div className="relative h-screen w-full sm:w-4/6 xl:w-4/12 bg-stone-800 text-white">
                 <div className="h-full relative flex flex-col justify-center pt-8 pb-28 px-6 overflow-hidden ">
                   {children}
                 </div>

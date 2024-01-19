@@ -15,7 +15,7 @@ const BaseTemplate = (props: IBaseTemplateProps) => {
 
     return (
         <div className={`${firasans.className} w-full flex align-center items-center justify-center`}>
-            <div className="relative h-screen w-full sm:w-4/6 xl:max-w-2xl bg-stone-800 text-white">
+            <div className="relative h-screen w-full bg-stone-800 text-white">
                 <main>
                     {props.children}
                 </main>
