@@ -39,7 +39,6 @@ const SearchForm = () => {
             </div>
           }
           onChange={(e) => {
-            console.log('eee')
             setSearchParam(e.target.value)
           }}
         />

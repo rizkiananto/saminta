@@ -14,8 +14,10 @@ export async function middleware(req: NextRequest) {
     } = await supabase.auth.getSession();
     console.log(session)
     if (!session) {
-        return NextResponse.rewrite(new URL('/', req.url));
+      console.log(':: no session')
+      return NextResponse.rewrite(new URL('/', req.url));
     }
+    console.log('res returned-->')
     return res;
 }
 

@@ -10,6 +10,7 @@ import { ModalQueuePlayerAdd, ModalQueuePlayerCustom, ModalQueueSettings, ModalQ
 import { createClient } from '@supabase/supabase-js';
 import toast, { Toaster } from 'react-hot-toast';
 
+console.log('entering antre page')
 const firasans = Fira_Sans({
   weight: '400',
   subsets: ['latin'],
@@ -236,6 +237,7 @@ export default function AntreanPage () {
           getPlayerList();
         }
       } catch (error) {
+        console.log('=====error=======')
         console.log(error)
       }
     }

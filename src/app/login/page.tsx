@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers';
+import iconPic from 'public/image1.png'
 
 const lilita_one = Lilita_One({
   weight: '400',
@@ -58,7 +59,7 @@ export default function Home() {
           <Image
             height={40}
             width={40}
-            src={'/image1.png'}
+            src={iconPic}
             alt='icon' />
           <h1 className={`${lilita_one.className} text-white text-xl`}>SAMINTA.COM</h1>
           </div>
