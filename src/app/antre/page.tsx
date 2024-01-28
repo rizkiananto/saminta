@@ -9,8 +9,9 @@ import {
 import { ModalQueuePlayerAdd, ModalQueuePlayerCustom, ModalQueueSettings, ModalQueueAdjust } from './modal';
 import { createClient } from '@supabase/supabase-js';
 import toast, { Toaster } from 'react-hot-toast';
+import { supabase } from '@/lib/supabase';
+import { DashboardTemplate } from '@/templates/DashboardTemplate';
 
-console.log('entering antre page')
 const firasans = Fira_Sans({
   weight: '400',
   subsets: ['latin'],
@@ -37,11 +38,6 @@ interface pId { //player ID - grouping
   group: string;
   player: (PlayerFix)[];
 }
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
 
 export default function AntreanPage () {
   const [isLoadData, setIsLoadData] = useState<boolean>(true);
@@ -208,7 +204,6 @@ export default function AntreanPage () {
 
   const getPlayerList = async () => {
     const {data: player_game}= await supabase.from('player_game').select().order('queue_no');
-
     if (player_game) destructureList(player_game)
   }
 
@@ -226,10 +221,11 @@ export default function AntreanPage () {
     const activeQueue = queueData[0];
     for (const player of activeQueue.player ) {
       const isDeleteRecord: Boolean = player.match_requested - 1 === 0 ? true : false;
+      const newMatchTotal = !isDeleteRecord ? player.match_requested - 1 : 0; 
       try {
         const update = !isDeleteRecord ? await supabase
           .from('player_game')
-          .update({ match_requested: player.match_requested - 1 })
+          .update({ match_requested: newMatchTotal })
           .eq('id', player.id) : await supabase.from('player_game').delete().eq('id', player.id) 
 
         if (update) {
@@ -237,7 +233,6 @@ export default function AntreanPage () {
           getPlayerList();
         }
       } catch (error) {
-        console.log('=====error=======')
         console.log(error)
       }
     }
@@ -300,7 +295,7 @@ export default function AntreanPage () {
   }
 
   return (
-    <>
+    <DashboardTemplate>
       <Toaster />
       <div className="h-full relative pb-24 overflow-hidden ">
         <div className='flex flex-wrap flex-col items-start gap-x-3'>
@@ -379,7 +374,7 @@ export default function AntreanPage () {
         onOpenChange={() => {setIsModalQueueAdjustOpen(!isModalQueueAdjustOpen)}} 
         onClose={() => {setIsModalQueueAdjustOpen(!isModalQueueAdjustOpen)}} 
         onSubmit={onSubmitMaxQueue} />
-    </>
+    </DashboardTemplate>
   )
 };
 

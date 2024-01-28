@@ -5,6 +5,7 @@ import {
   Card, Input, Divider, Chip
 } from "@nextui-org/react";
 import { createClient } from "@supabase/supabase-js";
+import { DashboardTemplate } from "@/templates/DashboardTemplate";
 
 const firasans = Fira_Sans({
   weight: '400',
@@ -64,6 +65,7 @@ const PlayerScreen = () => {
   }
 
   return (
+    <DashboardTemplate>
     <div className="grow h-full">
       <SearchForm />
       <div className="mt-10 flex flex-wrap gap-4">
@@ -85,6 +87,7 @@ const PlayerScreen = () => {
         }) : null}
       </div>
     </div>
+    </DashboardTemplate>
   )
 }
 

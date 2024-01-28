@@ -5,6 +5,7 @@ import {
   Card, Input, Divider, Chip
 } from "@nextui-org/react";
 import { createClient } from "@supabase/supabase-js";
+import { DashboardTemplate } from "@/templates/DashboardTemplate";
 
 const firasans = Fira_Sans({
   weight: '400',
@@ -20,6 +21,7 @@ const supabase = createClient(
 
 const PlayerScreen = () => {
   return (
+    <DashboardTemplate>
     <div className={`${firasans.className} grow h-full`}>
       <div className="mb-6 pb-6 border-b-1 border-white">
         <p className="">Antrean adalah sistem yang membantu para host / streamer MLBB yang menyediakan jasa mabar dengan para viewers untuk mengelola pencatatan dan antrean dari setiap match.</p>
@@ -34,6 +36,7 @@ const PlayerScreen = () => {
         </div>
       </div>
     </div>
+    </DashboardTemplate>
   )
 }
 

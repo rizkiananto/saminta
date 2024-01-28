@@ -1,23 +1,23 @@
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
-// import { NextRequest, NextResponse } from "next/server";
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { Database } from './database.types'
+import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(req: NextRequest) {
     const res = NextResponse.next();
+    let url = new URL(req.url);
     const supabase = createMiddlewareClient({ req, res });
-
     const {
         data: {session},
-        error
     } = await supabase.auth.getSession();
-    console.log(session)
+
     if (!session) {
-      console.log(':: no session')
-      return NextResponse.rewrite(new URL('/', req.url));
+      url.pathname = '/'
+      const urr = req.nextUrl.clone();
+      urr.pathname = '';
+      urr.search = '';
+      if (req.nextUrl.pathname !== '/' && req.nextUrl.pathname !== '/login') {
+        return NextResponse.redirect(urr);
+      } else return
     }
-    console.log('res returned-->')
     return res;
 }
 
