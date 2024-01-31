@@ -297,14 +297,14 @@ export default function AntreanPage () {
   return (
     <DashboardTemplate>
       <Toaster />
-      <div className="h-full relative pb-24 overflow-hidden ">
+      <div className="h-full relative pb-26 overflow-hidden ">
         <div className='flex flex-wrap flex-col items-start gap-x-3'>
           {!isLoadData ?
           <>
           <div className='flex gap-2 w-full mb-2'>
             <div>
-              <h1 className={`${firasans.className} text-white text-xl`}>Hi John! Ada {queueData.length} total antrian</h1>
-              <p className={`${firasans.className} text-gray-400 text-sm`}>slot kosong di antrian 4 - estimasi 3 Jam</p>
+              <h1 className={`${firasans.className} text-white text-xl`}>Total {queueData.length} antrian</h1>
+              <p className={`${firasans.className} text-gray-400 text-sm`}>slot kosong di antrian ke 4</p>
             </div>
             <div className='h-full text-right grow justify-self-start self-center'>
               <Button 
@@ -385,7 +385,7 @@ const QueueCard = ({data, active, allQueue, onclick, updatePlayer, isReadyToPlay
     return (
       <>
         <div 
-          className='w-6 fill-red-200 hover:cursor-pointer' 
+          className='absolute left-1 w-6 fill-red-200 hover:cursor-pointer' 
           onClick={() => {
             if (moveable) onclick(q.id)
             else toast.error('Player berada di antrian pertama')
@@ -400,21 +400,21 @@ const QueueCard = ({data, active, allQueue, onclick, updatePlayer, isReadyToPlay
 
   return (
     <>
-      <p className={`text-center font-bold ${active?'mb-1 text-xl text-yellow-400':'mb-0'}`}>{data.label}</p>
-      <div className={`w-full ${bgCard} rounded-lg w-full p-5 ${active?'':'pt-2'} flex flex-wrap gap-4 justify-center mb-6`}>
+      <p className={`text-center font-bold ${active?'mb-1 text-xl text-yellow-400':'text-emerald-500 mb-0'}`}>{data.label}</p>
+      <div className={`w-full ${bgCard} rounded-lg w-full px-1 md:px-5 md:py-5 ${active?'py-5':'pt-2'} flex flex-wrap gap-4 justify-center mb-6`}>
         {data.player && data.player.map((q:any, j:any) => {
           return (
-            <div key={j} className={`text-center auo align-center gap-2 p-2 rounded-md w-min ${q? active ? 'bg-slate-100' : 'bg-zinc-500' : 'bg-transparent border-dashed border-2 border-gray-400'}`}>
+            <div key={j} className={`relative text-center auo align-center md:gap-2 md:p-2 rounded-md w-min ${q? active ? 'bg-slate-100' : 'bg-zinc-500' : 'bg-transparent border-dashed border-2 border-gray-400'}`}>
               {q?
-              <div className={`flex gap-2 justify-center items-center pe-2`}>
+              <div className={`h-full flex gap-2 justify-center items-center px-2`}>
                 {isMoveable(q)}
-                <div className={`grow ${active?'text-black':''} sm:max-w-3 sm:w-8`}>
-                  <p className={`font-semibold sm:max-w-3 sm:truncate ...`}>{q.game_nickname}</p>
-                  {active && <p className={`sm:max-w-3 sm:truncate ...`}>{q.game_id}</p>}
+                <div className={`px-10 grow ${active?'text-black':''} sm:max-w-2 sm:w-8`}>
+                  <p className={`font-semibold sm:max-w-2 line-clamp-1 sm:truncate ...`}>{q.game_nickname}</p>
+                  {active && <p className={`sm:max-w-2 sm:truncate ...`}>{q.game_id}</p>}
                 </div>
                 {active ?
                 <div 
-                  className='w-6 hover:cursor-pointer'
+                  className='absolute right-1 w-6 hover:cursor-pointer'
                   onClick={() => {
                     navigator.clipboard.writeText(q.game_id);
                     toast.success('ID berhasil dicopy!');
