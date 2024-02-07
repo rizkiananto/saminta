@@ -6,7 +6,7 @@ import {
   Button,
   RadioGroup, Radio, Link
 } from "@nextui-org/react";
-import { ModalQueuePlayerAdd, ModalQueuePlayerCustom, ModalQueueSettings, ModalQueueAdjust } from './modal';
+import { ModalQueuePlayerAdd, ModalQueuePlayerCustom, ModalQueueSettings, ModalQueueAdjust, ModalQueueDone } from './modal';
 import { createClient } from '@supabase/supabase-js';
 import toast, { Toaster } from 'react-hot-toast';
 import { supabase } from '@/lib/supabase';
@@ -42,6 +42,14 @@ interface pId { //player ID - grouping
 export default function AntreanPage () {
   const [isLoadData, setIsLoadData] = useState<boolean>(true);
   const [playerList, setPlayerList] = useState<PlayerFix[]>([]);
+  const [playerDataList, setPlayerDataList] = useState<{
+    id: string,
+    game_id: string,
+    game_nickname: string,
+    email: string,
+    create_date: string,
+    edit_date: string,
+  }[]>([])
   const [queueListRaw, setQueueListRaw] = useState<PlayerFix[]>([]);
   const [queueData, setQueueData] = useState<any[]>([]);
   const [queueMode, setQueueMode] = useState<string>('game-queue');
@@ -50,6 +58,7 @@ export default function AntreanPage () {
   const [isModalAddOpen, setIsModalAddOpen] = useState<boolean>(false);
   const [isModalSettingsOpen, setIsModalSettingsOpen] = useState<boolean>(false);
   const [isModalQueueAdjustOpen, setIsModalQueueAdjustOpen] = useState<boolean>(false);
+  const [isModalQueueDone, setIsModalQueueDone] = useState<boolean>(false)
 
   const queueCustomPlayerBased = () => {
     const QUEUE_LIST: Queue[] = [];
@@ -202,6 +211,15 @@ export default function AntreanPage () {
     setPlayerList(deformPlayerList);
   }
 
+  const getPlayerDataList = async () => {
+    try {
+      const {data: player_list} = await supabase.from('player').select();
+      if (player_list && player_list.length > 0) setPlayerDataList(player_list);
+    } catch (error) {
+      console.log('error getting player data', error)
+    }
+  }
+
   const getPlayerList = async () => {
     const {data: player_game}= await supabase.from('player_game').select().order('queue_no');
     if (player_game) destructureList(player_game)
@@ -236,6 +254,8 @@ export default function AntreanPage () {
         console.log(error)
       }
     }
+    setIsModalQueueDone(false)
+    toast.success('Antrian telah selesai dan terupdate!')
   }
 
   useEffect(() => {
@@ -310,7 +330,11 @@ export default function AntreanPage () {
               <Button 
                 color='primary' 
                 startContent={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24" id="plus"><g fill="none" fillRule="evenodd" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" transform="translate(2 2)"><line x1="10" x2="10" y1="6.327" y2="13.654"></line><line x1="13.667" x2="6.333" y1="9.99" y2="9.99"></line><path d="M14.6857143,0 L5.31428571,0 C2.04761905,0 0,2.31208373 0,5.58515699 L0,14.414843 C0,17.6879163 2.03809524,20 5.31428571,20 L14.6857143,20 C17.9619048,20 20,17.6879163 20,14.414843 L20,5.58515699 C20,2.31208373 17.9619048,0 14.6857143,0 Z"></path></g></svg>}
-                onClick={() => {setIsModalAddOpen(true)}}>Antrean</Button>
+                onClick={() => {
+                  getPlayerDataList();
+                  setIsModalAddOpen(true)}}>
+                Antrean
+              </Button>
             </div>
           </div>
           <Link 
@@ -334,15 +358,17 @@ export default function AntreanPage () {
             </div> 
           : <>
           { queueData.length > 0 ? queueData.map((queue, i) => {
-            return (
+
+          return (
             <div key={i}>
               <QueueCard 
                 data={queue} 
                 allQueue={queueData}
                 onclick={rearrange} 
                 active={i===0} 
-                updatePlayer={updatePlayer} 
-                isReadyToPlay={i===0 && queue.player.length !== 3} />
+                totalPlayer={queueListRaw.length}
+                updatePlayer={() => setIsModalQueueDone(true)} 
+                isReadyToPlay={i===0 && !queue.player.includes(null)} />
             </div>
             )
           }) : 
@@ -360,6 +386,7 @@ export default function AntreanPage () {
         onClose={cancelModalQueue} 
         onSubmit={onSubmitMaxQueue} />
       <ModalQueuePlayerAdd 
+        playerList={playerDataList}
         isOpen={isModalAddOpen} 
         onOpenChange={() => {setIsModalAddOpen(!isModalAddOpen)}} 
         onClose={() => {setIsModalAddOpen(!isModalAddOpen)}} 
@@ -374,21 +401,31 @@ export default function AntreanPage () {
         onOpenChange={() => {setIsModalQueueAdjustOpen(!isModalQueueAdjustOpen)}} 
         onClose={() => {setIsModalQueueAdjustOpen(!isModalQueueAdjustOpen)}} 
         onSubmit={onSubmitMaxQueue} />
+      <ModalQueueDone
+        isOpen={isModalQueueDone} 
+        onOpenChange={() => {setIsModalQueueDone(!isModalQueueDone)}} 
+        onClose={() => {setIsModalQueueDone(!isModalQueueDone)}} 
+        onSubmit={updatePlayer} />
+        
     </DashboardTemplate>
   )
 };
 
-const QueueCard = ({data, active, allQueue, onclick, updatePlayer, isReadyToPlay}: any) => {
+const QueueCard = ({data, active, allQueue, onclick, totalPlayer, updatePlayer, isReadyToPlay}: any) => {
   const bgCard = active ? 'bg-gradient-to-r from-teal-700 via-teal-800 to-zinc-800 shadow-md shadow-zinc-500' : ''
   const isMoveable = (q:any) => {
-    const moveable = active || (!active && !allQueue[0].player.some((p:any) => p.game_id === q.game_id))
+    const moveable = totalPlayer>4 && (active || (!active && !allQueue[0].player.some((p:any) => p.game_id === q.game_id)))
+
     return (
       <>
         <div 
           className='absolute left-1 w-6 fill-red-200 hover:cursor-pointer' 
           onClick={() => {
             if (moveable) onclick(q.id)
-            else toast.error('Player berada di antrian pertama')
+            else {
+              if (totalPlayer<4 && active) toast.error('Tidak ada pemain lain untuk diganti')
+              else toast.error('Player sudah di antrian pertama')
+            } 
           }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" id="square-sort-vertical">
             <path fill={moveable?'#111':'#4b5563'} fillRule="evenodd" d="M2 12C2 7.28595 2 4.92893 3.46447 3.46447C4.92893 2 7.28595 2 12 2C16.714 2 19.0711 2 20.5355 3.46447C22 4.92893 22 7.28595 22 12C22 16.714 22 19.0711 20.5355 20.5355C19.0711 22 16.714 22 12 22C7.28595 22 4.92893 22 3.46447 20.5355C2 19.0711 2 16.714 2 12ZM7.55495 12.7455C7.27632 12.439 6.80199 12.4164 6.49549 12.695C6.189 12.9737 6.16641 13.448 6.44504 13.7545L8.94504 16.5045C9.08719 16.6609 9.28869 16.75 9.5 16.75C9.71131 16.75 9.91281 16.6609 10.055 16.5045L12.555 13.7545C12.8336 13.448 12.811 12.9737 12.5045 12.695C12.198 12.4164 11.7237 12.439 11.445 12.7455L10.25 14.06V8C10.25 7.58579 9.91421 7.25 9.5 7.25C9.08579 7.25 8.75 7.58579 8.75 8V14.06L7.55495 12.7455ZM11.4955 11.305C11.802 11.5836 12.2763 11.561 12.555 11.2545L13.75 9.93995L13.75 16C13.75 16.4142 14.0858 16.75 14.5 16.75C14.9142 16.75 15.25 16.4142 15.25 16L15.25 9.93995L16.445 11.2545C16.7237 11.561 17.198 11.5836 17.5045 11.305C17.811 11.0263 17.8336 10.552 17.555 10.2455L15.055 7.49549C14.9128 7.33914 14.7113 7.25 14.5 7.25C14.2887 7.25 14.0872 7.33914 13.945 7.49549L11.445 10.2455C11.1664 10.552 11.189 11.0263 11.4955 11.305Z" clipRule="evenodd"></path>
@@ -436,7 +473,7 @@ const QueueCard = ({data, active, allQueue, onclick, updatePlayer, isReadyToPlay
           <Button color="success" className='bg-yellow-400 mt-4' onClick={() => {}}>
             <label className='text-black text-lg font-medium mx-5' onClick={() => updatePlayer()}>selesai</label>
           </Button> 
-          : active && <p className='text-gray-200 mt-4'>Tidak dapat memulai game dengan 3 orang pemain</p>
+          : active && <p className='text-gray-200 text-center font-bold mt-4'>Tidak dapat memulai game dengan 3 orang pemain</p>
         }
       </div>
     </>

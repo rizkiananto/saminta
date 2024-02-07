@@ -1,6 +1,7 @@
 import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs";
 import { NextRequest, NextResponse } from "next/server";
 
+
 export async function middleware(req: NextRequest) {
     const res = NextResponse.next();
     let url = new URL(req.url);
@@ -14,8 +15,8 @@ export async function middleware(req: NextRequest) {
       const urr = req.nextUrl.clone();
       urr.pathname = '';
       urr.search = '';
-      if (req.nextUrl.pathname !== '/' && req.nextUrl.pathname !== '/login') {
-        return NextResponse.redirect(urr);
+      if (!['/', '/login', '/store'].includes(req.nextUrl.pathname)) {
+        return NextResponse.redirect(urr)
       } else return
     }
     return res;

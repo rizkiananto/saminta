@@ -2,10 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { Fira_Sans } from 'next/font/google'
 import {
-  Card, Input, Divider, Chip
+  Tooltip, Button, Card, Input, Divider, Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, RadioGroup, Radio
 } from "@nextui-org/react";
 import { createClient } from "@supabase/supabase-js";
 import { DashboardTemplate } from "@/templates/DashboardTemplate";
+import { supabase } from "@/lib/supabase";
+import { EyeIcon, EditIcon, DeleteIcon } from "./icon";
 
 const firasans = Fira_Sans({
   weight: '400',
@@ -13,16 +15,12 @@ const firasans = Fira_Sans({
   display: 'swap'
 })
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
+const colors = ["default", "primary", "secondary", "success", "warning", "danger"];
 
 const SearchForm = () => {
   const [searchParam, setSearchParam] = useState<string>('')
   return (
-    <div className="grow">
+    <div className="grow mb-5">
       <div>
         <Input
           key={'warning'}
@@ -68,23 +66,56 @@ const PlayerScreen = () => {
     <DashboardTemplate>
     <div className="grow h-full">
       <SearchForm />
-      <div className="mt-10 flex flex-wrap gap-4">
-        {players ? players.map((player:any, i:number) => {
-          return (
-            <Card key={i} className="grow bg-gradient-to-r from-zinc-700 via-zinc-600 to-zinc-500 text-white px-4 py-2 shadow-xl shadow-gray-700">
-              <div className="max-w-1">
-                <p className="text-lg font-bold">{player.game_nickname}</p>
-                <p className="text-sm font-semibold mb-1">{player.game_id}</p>
-                <p className="text-xs text-gray-200"><strong>2 Antrian</strong> - Total 3x Mabar</p>
-              </div>
-              <div className="mt-4 flex gap-1">
-                <Chip variant="shadow" color="warning" size="sm" radius="sm">Dark System</Chip>
-                <Chip variant="shadow" color="danger" size="sm" radius="sm">Ghoib</Chip>
-                <Chip variant="shadow" color="primary" size="sm" radius="sm">Pelanggan</Chip>
-              </div>
-            </Card>
-          )
-        }) : null}
+      <div className='text-right mb-3'>
+        <Button 
+          color='primary' 
+          startContent={<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" viewBox="0 0 24 24" id="plus"><g fill="none" fillRule="evenodd" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" transform="translate(2 2)"><line x1="10" x2="10" y1="6.327" y2="13.654"></line><line x1="13.667" x2="6.333" y1="9.99" y2="9.99"></line><path d="M14.6857143,0 L5.31428571,0 C2.04761905,0 0,2.31208373 0,5.58515699 L0,14.414843 C0,17.6879163 2.03809524,20 5.31428571,20 L14.6857143,20 C17.9619048,20 20,17.6879163 20,14.414843 L20,5.58515699 C20,2.31208373 17.9619048,0 14.6857143,0 Z"></path></g></svg>}
+          onClick={() => {
+
+            }}>
+          Player
+        </Button>
+      </div>
+      <div className="flex flex-col gap-3">
+        <Table 
+          color={'warning'} 
+          aria-label="Example static collection table"
+          classNames={{wrapper: 'bg-zinc-700',table: 'bg-zinc-700', th: 'bg-zinc-900'}} >
+          <TableHeader>
+            <TableColumn>Nama</TableColumn>
+            <TableColumn>Game</TableColumn>
+            <TableColumn>Aksi</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {players ? players.map((player:any, i:number) => {
+              return (
+                <TableRow key={i}>
+                  <TableCell><label className="line-clamp-1">{player.game_nickname}</label></TableCell>
+                  <TableCell>{player.id}x</TableCell>
+                  <TableCell>
+                    <div className="relative flex items-center gap-2">
+                      <Tooltip content="Edit user">
+                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                          <EyeIcon />
+                        </span>
+                      </Tooltip>
+                      <Tooltip content="Edit user">
+                        <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
+                          <EditIcon />
+                        </span>
+                      </Tooltip>
+                      <Tooltip color="danger" content="Delete user">
+                        <span className="text-lg text-danger cursor-pointer active:opacity-50">
+                          <DeleteIcon />
+                        </span>
+                      </Tooltip>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )
+            }) : null }
+          </TableBody>
+        </Table>
       </div>
     </div>
     </DashboardTemplate>

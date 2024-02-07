@@ -45,6 +45,12 @@ export default function Home() {
             }}>
             <label className='font-semibold'>Login</label>
           </Button> 
+
+          <Button className='mt-4' color="primary" variant='flat' onClick={() => {
+            router.push('/store')
+            }}>
+            <label className='font-semibold'>Beli Jasa dari Host!</label>
+          </Button> 
         </div>
       </div>
     </BaseTemplate>
