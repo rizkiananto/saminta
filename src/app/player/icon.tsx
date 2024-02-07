@@ -28,6 +28,12 @@ export const EyeIcon = (props:any) => (
   </svg>
 );
 
+export const IconDefault = () => {
+  return (
+    <div></div>
+  )
+}
+
 export const EditIcon = (props:any) => (
   <svg
     aria-hidden="true"
@@ -114,3 +120,5 @@ export const DeleteIcon = (props:any) => (
     />
   </svg>
 );
+
+export default IconDefault;
