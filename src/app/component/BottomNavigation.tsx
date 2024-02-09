@@ -94,16 +94,16 @@ const BottomNavigation = () => {
   const router  = useRouter();
   const pathName = usePathname();
 
-  useEffect(() => {
-    const initMenu = cloneDeep(MENU);
-    initMenu.map((menu:any) => {
-      if (menu.href === pathName) menu.active = true
-      else menu.active = false
-      return menu
-    })
-    const initMenuFiltered = initMenu.filter((menu:any) => menu.show === true)
-    setMenu(initMenuFiltered)
-  }, [])
+  // useEffect(() => {
+  //   const initMenu = cloneDeep(MENU);
+  //   initMenu.map((menu:any) => {
+  //     if (menu.href === pathName) menu.active = true
+  //     else menu.active = false
+  //     return menu
+  //   })
+  //   const initMenuFiltered = initMenu.filter((menu:any) => menu.show === true)
+  //   setMenu(initMenuFiltered)
+  // }, [])
   
   const handleClick = (e:any, href:string) => {
     e.preventDefault();

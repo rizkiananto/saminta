@@ -34,7 +34,7 @@ interface Queue {
   player: (PlayerFix | null)[];
 }
 
-interface pId { //player ID - grouping
+interface pId { 
   group: string;
   player: (PlayerFix)[];
 }
@@ -258,17 +258,17 @@ export default function AntreanPage () {
     toast.success('Antrian telah selesai dan terupdate!')
   }
 
-  useEffect(() => {
-    getPlayerList();
-  }, [])
+  // useEffect(() => {
+  //   getPlayerList();
+  // }, [])
 
-  useEffect(() => {
-    if (playerList && playerList.length > 0) queueGameBased();
-  }, [playerList])
+  // useEffect(() => {
+  //   if (playerList && playerList.length > 0) queueGameBased();
+  // }, [playerList])
 
-  useEffect(() => {
-    queueCustomPlayerBased();
-  }, [maxConsequencePlay])
+  // useEffect(() => {
+  //   queueCustomPlayerBased();
+  // }, [maxConsequencePlay])
 
   const cnQueueMode = (value:string) => {
     if (value === 'game-queue' || value === 'player-queue') setIsLoadData(true)
