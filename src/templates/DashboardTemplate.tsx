@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import { Fira_Sans } from 'next/font/google';
-import BottomNavigation from '@/app/component/BottomNavigation';
+import {BottomNavigation} from '@/app/component/BottomNavigation';
 
 type IBaseTemplateProps = {
     children: ReactNode;
