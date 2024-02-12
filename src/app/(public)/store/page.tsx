@@ -150,7 +150,7 @@ const ProductSection = () => {
                           })
                         }
                         setCart(newCart)
-                      }}>Tambah</Button>
+                      }}>Beli</Button>
                   </div>
                   {p.multi_buy &&
                   <>
@@ -187,25 +187,8 @@ export default function Home() {
   }, [])
 
   return (
-    <BaseTemplate>
-      <div className='flex flex-col gap-5 pt-6 pb-14'>
-        <div className='flex flex-col items-start justify-start'>
-          <div className='flex justify-center items-center gap-2'>
-          <Image
-            height={40}
-            width={40}
-            src={iconPic}
-            alt='icon' />
-          <h1 className={`${lilita_one.className} text-white text-xl`}>
-            <Link href='/'>SAMINTA.COM</Link>
-          </h1>
-          </div>
-          <p className='text-gray-400 text-sm'>Donate. Request. Have Fun!</p>
-        </div>
-        <div className='mt-8'>
-          <ProductSection />
-        </div>
-      </div>
-    </BaseTemplate>
+    <>
+      <ProductSection />
+    </>
   )
 }

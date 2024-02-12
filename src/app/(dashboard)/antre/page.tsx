@@ -7,10 +7,8 @@ import {
   RadioGroup, Radio, Link
 } from "@nextui-org/react";
 import { ModalQueuePlayerAdd, ModalQueuePlayerCustom, ModalQueueSettings, ModalQueueAdjust, ModalQueueDone } from './modal';
-import { createClient } from '@supabase/supabase-js';
 import toast, { Toaster } from 'react-hot-toast';
 import { supabase } from '@/lib/supabase';
-import { DashboardTemplate } from '@/templates/DashboardTemplate';
 
 const firasans = Fira_Sans({
   weight: '400',
@@ -258,17 +256,17 @@ export default function AntreanPage () {
     toast.success('Antrian telah selesai dan terupdate!')
   }
 
-  // useEffect(() => {
-  //   getPlayerList();
-  // }, [])
+  useEffect(() => {
+    getPlayerList();
+  }, [])
 
-  // useEffect(() => {
-  //   if (playerList && playerList.length > 0) queueGameBased();
-  // }, [playerList])
+  useEffect(() => {
+    if (playerList && playerList.length > 0) queueGameBased();
+  }, [playerList])
 
-  // useEffect(() => {
-  //   queueCustomPlayerBased();
-  // }, [maxConsequencePlay])
+  useEffect(() => {
+    queueCustomPlayerBased();
+  }, [maxConsequencePlay])
 
   const cnQueueMode = (value:string) => {
     if (value === 'game-queue' || value === 'player-queue') setIsLoadData(true)
@@ -315,7 +313,7 @@ export default function AntreanPage () {
   }
 
   return (
-    <DashboardTemplate>
+    <>
       <Toaster />
       <div className="h-full relative pb-26 overflow-hidden ">
         <div className='flex flex-wrap flex-col items-start gap-x-3'>
@@ -407,7 +405,7 @@ export default function AntreanPage () {
         onClose={() => {setIsModalQueueDone(!isModalQueueDone)}} 
         onSubmit={updatePlayer} />
         
-    </DashboardTemplate>
+    </>
   )
 };
 

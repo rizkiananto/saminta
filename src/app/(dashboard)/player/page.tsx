@@ -1,21 +1,10 @@
 'use client'
 import React, { useEffect, useState } from "react";
-import { Fira_Sans } from 'next/font/google'
 import {
-  Tooltip, Button, Card, Input, Divider, Chip, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, RadioGroup, Radio
+  Tooltip, Button, Input, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell
 } from "@nextui-org/react";
-import { createClient } from "@supabase/supabase-js";
-import { DashboardTemplate } from "@/templates/DashboardTemplate";
 import { supabase } from "@/lib/supabase";
-import { EyeIcon, EditIcon, DeleteIcon } from "./icon";
-
-const firasans = Fira_Sans({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap'
-})
-
-const colors = ["default", "primary", "secondary", "success", "warning", "danger"];
+import { EyeIcon, EditIcon, DeleteIcon } from "../../../components/icon";
 
 const SearchForm = () => {
   const [searchParam, setSearchParam] = useState<string>('')
@@ -63,7 +52,7 @@ const PlayerScreen = () => {
   }
 
   return (
-    <DashboardTemplate>
+    <>
     <div className="grow h-full">
       <SearchForm />
       <div className='text-right mb-3'>
@@ -118,7 +107,7 @@ const PlayerScreen = () => {
         </Table>
       </div>
     </div>
-    </DashboardTemplate>
+    </>
   )
 }
 

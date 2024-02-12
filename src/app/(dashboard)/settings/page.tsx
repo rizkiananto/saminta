@@ -1,14 +1,13 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Fira_Sans } from 'next/font/google'
 import {
-  Card, Input, Divider, Chip, Button
+  Divider, Button
 } from "@nextui-org/react";
 import { supabase } from "@/lib/supabase";
 import { ModalConfirmLogout } from "./modal";
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
-import { DashboardTemplate } from "@/templates/DashboardTemplate";
 
 const firasans = Fira_Sans({
   weight: '400',
@@ -37,7 +36,7 @@ const SettingsScreen = () => {
   }
   
   return (
-    <DashboardTemplate>
+    <>
     <Toaster />
     <div className={`${firasans.className} grow h-full`}>
       <div className="">
@@ -62,7 +61,7 @@ const SettingsScreen = () => {
       onOpenChange={() => {setModalConfirmShow(!modalConfirmShow)}} 
       onClose={() => {setModalConfirmShow(!modalConfirmShow)}} 
       onSubmit={signOut} />
-    </DashboardTemplate>
+    </>
   )
 }
 

@@ -1,24 +1,13 @@
 'use client';
 
 import Image from 'next/image'
-import { Lilita_One, Fira_Sans } from 'next/font/google'
+import { Lilita_One } from 'next/font/google'
 import { BaseTemplate } from '@/templates/BaseTemplate'
-import Link from 'next/link'
-import {
-  Input, Button,
-} from "@nextui-org/react";
-import {supabase} from '@/lib/supabase';
+import { Button } from "@nextui-org/react";
 import iconPic from 'public/image1.png'
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 const lilita_one = Lilita_One({
-  weight: '400',
-  subsets: ['latin'],
-  display: 'swap'
-})
-
-const fira_sans = Fira_Sans({
   weight: '400',
   subsets: ['latin'],
   display: 'swap'

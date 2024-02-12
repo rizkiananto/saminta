@@ -1,11 +1,6 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Fira_Sans } from 'next/font/google'
-import {
-  Card, Input, Divider, Chip
-} from "@nextui-org/react";
-import { createClient } from "@supabase/supabase-js";
-import { DashboardTemplate } from "@/templates/DashboardTemplate";
 
 const firasans = Fira_Sans({
   weight: '400',
@@ -13,18 +8,12 @@ const firasans = Fira_Sans({
   display: 'swap'
 })
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
-
 const PlayerScreen = () => {
   return (
-    <DashboardTemplate>
+    <>
     <div className={`${firasans.className} grow h-full`}>
       <div className="mb-6 pb-6 border-b-1 border-white">
-        <p className="">Antrean adalah sistem yang membantu para host / streamer MLBB yang menyediakan jasa mabar dengan para viewers untuk mengelola pencatatan dan antrean dari setiap match.</p>
+        <p className="">Saminta adalah sistem yang membantu para host / streamer MLBB yang menyediakan jasa mabar dengan para viewers untuk mengelola pencatatan dan antrean dari setiap match.</p>
       </div>
       <div className="">
         <p className="text-2xl">Tutorial Penggunaan</p>
@@ -36,7 +25,7 @@ const PlayerScreen = () => {
         </div>
       </div>
     </div>
-    </DashboardTemplate>
+    </>
   )
 }
 

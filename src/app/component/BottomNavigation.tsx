@@ -131,4 +131,4 @@ export const BottomNavigation = () => {
   )
 }
 
-// export default BottomNavigation;
+export default BottomNavigation;
