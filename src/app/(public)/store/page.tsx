@@ -39,32 +39,84 @@ interface cartItem {
   id: string,
   name: string, 
   price: number, 
-  qty: number,
+  quantity: number,
 }
 
 interface CartProps {
   cart: cartItem[],
 }
 
-const CartSection = ({cart} : CartProps) => {
+const product = {
+  id: ~~(Math.random() * 100) + 1,
+  image: "/img.png",
+  name: "LEVI'S® WOMEN'S XL TRUCKER JACKET",
+  price: 350000,
+  description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ipsa accusantium, aspernatur provident beatae corporis veniam atque facilis, consequuntur assumenda, vitae dignissimos iste exercitationem dolor eveniet alias eos ullam nesciunt voluptatum",
+  colors: [
+      { value: "putih", label: "Putih" },
+      { value: "biru", label: "Biru" },
+      { value: "coklat", label: "Coklat" },
+      { value: "kuning", label: "Kuning" }
+  ]
+}
+
+const CartSection = ({cart, user} : {cart:cartItem[], user:userData}) => {
   let totalPrice = 0;
+  const checkout = async (params:any) => {
+    const data = {
+      id: String(product.id),
+      totalPrice: totalPrice,
+      items: cart,
+      user_email: user.email
+    }
+
+    const response = await fetch('/api/tokenizer', {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+
+    const requestData = await response.json();
+
+    window.snap.pay(requestData.token, {
+      onSuccess: function(res:any) {
+        console.log('sukses nih')
+        console.log(res)
+      },
+      onError: function(res:any) {
+        console.log('error nih')
+        console.log(res)
+      },
+      onPending: function(res:any) {
+        console.log('pending nih')
+        console.log(res)
+      },
+      onClose: function(res: any) {
+        console.log('gajdi ya?')
+      }
+    })
+  }
+
+  const enablePay = cart.length > 0 && user.email && user.game_id && user.nickname ? true : false
+
   return (
     <>
     <div>
       <div className='text-xs text-gray-400'>
         {cart.map((c:any, i:number) => {
-          totalPrice = totalPrice+(c.price*c.qty)
+          totalPrice = totalPrice+(c.price*c.quantity)
           return (
             <div key={i}>
-              <p>{c.name} ({c.qty}x) - {priceToCurrency.format(c.price*c.qty)}</p>
+              <p>{c.name} ({c.quantity}x) - {priceToCurrency.format(c.price*c.quantity)}</p>
             </div>
           )
         })}
       </div>
-      <p className='mt-2'>Total Pesanan : {priceToCurrency.format(totalPrice)}</p>
+      {cart.length > 0 ?
+      <p className='mt-2 font-bold text-yellow-400'>Total Pesanan : {priceToCurrency.format(totalPrice)}</p>
+      :null}
     </div>
     <div className='text-center mt-6'>
-      <Button color="primary" size='lg' variant='solid'>Bayar</Button>
+      <Button isDisabled={!enablePay} color="primary" size='lg' variant='solid' onClick={checkout}>Bayar</Button>
     </div>
     </>
   )
@@ -79,6 +131,7 @@ const PRODUCT_LIST = [
     multi_buy: true, 
     price_label: '/ game',
     price: 20000,
+    active: false,
     qty: 1 // this shouldnt come from db. just to get value from qty
   },
   {
@@ -89,6 +142,7 @@ const PRODUCT_LIST = [
     multi_buy: true, 
     price_label: '/ game',
     price: 50000,
+    active: false,
     qty: 1,
   },
   {
@@ -99,85 +153,205 @@ const PRODUCT_LIST = [
     multi_buy: false, 
     price_label: '',
     price: 10000,
+    active: false,
+    qty: 1,
+  },
+  {
+    id: '4',
+    name: 'Komen Album 2', 
+    tag: 'dapatkan komen eksklusif dari idolamu',
+    special_label: '',
+    multi_buy: false, 
+    price_label: '',
+    price: 10000,
+    active: false,
     qty: 1,
   },
 ]
 
+interface userData {
+  email: string,
+  nickname: string, 
+  game_id: string
+}
+
+const initialUserData: userData = {email: '', nickname: '', game_id: ''}
+
+const FormSection = ({user, setData}: {user: userData, setData: (data:any) => any}) => {
+  return (
+    <>
+    <div className='mb-4 text-center'>
+      <p className='text-lg font-bold mb-0'>Data diri anda</p>
+      <label className='text-sm text-gray-300'>isi data anda sebelum melakukan pembelian</label>
+    </div>
+    <div className='dark flex flex-col gap-2'>
+      <Input
+        type="email"
+        label="Email Anda"
+        name="email"
+        radius='sm'
+        color='default'
+        variant='faded'
+        value={user.email}
+        onChange={(e) => {
+          const newData = cloneDeep(user);
+          newData.email = e.target.value;
+          setData(newData)
+        }}
+      />
+      <div className='flex gap-2'>
+        <Input
+          type="text"
+          label="Nickname Game"
+          name="password"
+          color='default'
+          variant='faded'
+          radius='sm'
+          value={user.nickname}
+          onChange={(e) => {
+            const newData = cloneDeep(user);
+            newData.nickname = e.target.value;
+            setData(newData)
+          }}
+        />
+        <Input
+          type="text"
+          label="ID Game"
+          name="password"
+          color='default'
+          variant='faded'
+          radius='sm'
+          value={user.game_id}
+          onChange={(e) => {
+            const newData = cloneDeep(user);
+            newData.game_id = e.target.value;
+            setData(newData)
+          }}
+        />
+      </div>
+    </div>
+    </>
+  )
+}
+
+
+
 const ProductSection = () => {
   const [cart, setCart] = useState<cartItem[]>([])
+  const [userData, setUserData] = useState<userData>(initialUserData)
   const [prodList, setProdList] = useState<any[]>(PRODUCT_LIST)
 
-  return (
-    <div className={`${fira_sans.className} text-white`}>
-      <p className='text-center font-bold text-xl'>Mau minta apa dari host?</p>
-      <div className='flex flex-col gap-5 my-8'>
-        {prodList.map((p:any, i:number) => {
-          let qty = 1
-          if (cart.length > 0) {
-            const idx = cart.findIndex((c:cartItem) => c.id === p.id)
-            
-          }
+  // load snap script
+  useEffect(() => {
+    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+    const clientKey = process.env.NEXT_PUBLIC_CLIENT_KEY!;
+    const script = document.createElement('script');
+    script.src = snapScript;
+    script.setAttribute('data-client-key', clientKey);
+    script.async = true;
+    console.log('--> ', script)
 
-          return (
-            <Card key={p.id}>
-              <CardBody>
-                <div className='mb-2'>
-                  <div className='flex gap-1 items-center'>
-                    <label>{p.name}</label> 
-                    {p.special_label ?
-                    <>
-                    {iconLightning} <label className='text-orange-700 font-semibold'>{p.special_label}</label>
-                    </> : null}
-                  </div>
-                  <label className='text-sm text-gray-500'>{p.tag}</label>
-                </div>
-                <Divider />
-                <p className='text-gray-700 font-bold mt-3 mb-4'>{priceToCurrency.format(p.price)} {p.price_label}</p>
-                <div className='flex gap-2 items-center'>
-                  <div className=''>
-                      <Button className='' variant='flat' color='primary' onClick={() => {
-                        const newCart = cloneDeep(cart);
-                        const itemExist = newCart.length > 0 ? newCart.findIndex((c:any) => c.id === p.id) : -1;
-                        if (itemExist !== -1) {
-                          newCart[itemExist].qty = p.qty
-                          newCart[itemExist].price = p.price 
-                        } else {
-                          newCart.push({
-                            id: p.id,
-                            name: `${p.name} ${p.special_label}`,
-                            price: p.price,
-                            qty: p.qty,
-                          })
-                        }
-                        setCart(newCart)
-                      }}>Beli</Button>
-                  </div>
-                  {p.multi_buy &&
-                  <>
-                  <Input
-                    type="number"
-                    className="max-w-xs w-16"
-                    classNames={{inputWrapper: 'h-10'}}
-                    placeholder='1'
-                    name="password"
-                    onChange={(e) => {
-                      const newProdList = cloneDeep(prodList);
-                      const idx = newProdList.findIndex((np:any) => np.id === p.id)
-                      newProdList[idx].qty = parseInt(e.target.value);
-                      setProdList(newProdList)
-                    }}
-                  />
-                  <label className='text-gray-500 text-sm'>game</label>
-                  </>
-                  }
-                </div>
-              </CardBody>
-            </Card>
-          )
-        })}
+    document.body.appendChild(script)
+
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [])
+
+  const addToCart = (p:any, initialAdd:boolean, definedQty:any) => {
+    const newCart = cloneDeep(cart);
+    const currentQty = initialAdd ? 1 : definedQty && definedQty > 0 ? definedQty : 1
+    const itemExist = newCart.length > 0 ? newCart.findIndex((c:any) => c.id === p.id) : -1;
+    if (itemExist !== -1) {
+      newCart[itemExist].quantity = currentQty
+      newCart[itemExist].price = p.price
+    } else {
+      newCart.push({
+        id: p.id,
+        name: `${p.name} ${p.special_label}`,
+        price: p.price,
+        quantity: currentQty,
+      })
+    }
+    setCart(newCart)
+  }
+
+  return (
+    <div className={`${fira_sans.className}text-white md:5/6 pb-96 product-page-h md:pb-24 overflow-auto no-scrollbar`}>
+      <div className='mb-8'>
+        <FormSection user={userData} setData={setUserData}/>
       </div>
-      <CartSection cart={cart}/>
-    </div>  
+      <div>
+        <p className='text-center font-bold text-xl'>Mau minta apa dari host?</p>
+        <div className='flex flex-row flex-wrap gap-5 my-8 overflow-auto no-scrollbar'>
+          {prodList.map((p:any, i:number) => {
+            let qty = 1
+            if (cart.length > 0) {
+              const idx = cart.findIndex((c:cartItem) => c.id === p.id)
+            
+            }
+
+            return (
+              <div 
+                key={p.id} 
+                className={`active:bg-gray-800 focus:bg-gray-800 rounded-xl border border-gray-500 shadow-lg shadow-slate-600 grow w-2/5 hover:cursor-pointer hover:bg-green-800 ease-in duration-200 ${p.active?'bg-green-800':''}`}
+                onClick={() => {
+                  const newPL = cloneDeep(prodList);
+                  const idx = newPL.findIndex(prod => prod.id === p.id)
+                  if (!p.active) addToCart(p, true, null)
+                  else {
+                    const oldCart = cloneDeep(cart)
+                    const newCart = oldCart.filter(c => c.id !== p.id) 
+                    setCart(newCart)
+                  }
+                  newPL[idx].active = !newPL[idx].active
+                  setProdList(newPL)
+                }}
+                >
+              <Card classNames={{base: 'h-full bg-transparent text-white'}}>
+                <CardBody>
+                  <div className='' >
+                    <div className='gap-1 items-center font-bold'>
+                      <label>{p.name}</label> 
+                      {p.special_label ?
+                      <div className='flex items-center'>
+                      {iconLightning} <label className='text-yellow-400 font-semibold'>{p.special_label}</label>
+                      </div> : null}
+                    </div>
+                  </div>
+                  <p className='text-gray-200 text-sm mb-4'>{priceToCurrency.format(p.price)} {p.price_label}</p>
+                  <div className='flex gap-2 items-end grow'>
+                    {(p.active && p.multi_buy) &&
+                    <div className='z-10 flex flex-col items-center gap-1' onClick={(e) => e.stopPropagation()}>
+                      <small className='text-gray-200'>Jumlah game</small>
+                      <Input
+                        type="number"
+                        className=""
+                        classNames={{inputWrapper: 'h-4 ', input: 'h-4 max-w-xs w-16'}}
+                        placeholder='1'
+                        name="qty"
+                        onChange={(e) => {
+                          const newProdList = cloneDeep(prodList);
+                          const idx = newProdList.findIndex((np:any) => np.id === p.id)
+                          newProdList[idx].qty = parseInt(e.target.value);
+                          setProdList(newProdList)
+                          addToCart(p, false, parseInt(e.target.value))
+                        }}
+                      />
+                    </div>
+                    }
+                  </div>
+                </CardBody>
+              </Card>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+      <div>
+        <CartSection cart={cart} user={userData}/>
+      </div>
+    </div>
   )
 }
 

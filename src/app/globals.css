@@ -63,3 +63,22 @@ body {
 .w-inherit {
   width: inherit;
 }
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+.product-h {
+  height: calc(65vh - 100px);
+}
+.product-page-h {
+  height: 80vh;
+}

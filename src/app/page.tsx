@@ -28,18 +28,19 @@ export default function Home() {
           <h1 className={`${lilita_one.className} text-white text-xl`}>SAMINTA.COM</h1>
           </div>
           <p className='text-gray-400 text-sm'>Donate. Request. Have Fun!</p>
-          
-          <Button className='mt-4' color="success" onClick={() => {
-            router.push('/login')
-            }}>
-            <label className='font-semibold'>Login</label>
-          </Button> 
 
-          <Button className='mt-4' color="primary" variant='flat' onClick={() => {
+          <Button className='mt-4' color="primary" variant='shadow' onClick={() => {
             router.push('/store')
             }}>
             <label className='font-semibold'>Beli Jasa dari Host!</label>
           </Button> 
+
+          <Button className='mt-4' variant='flat' color="success" onClick={() => {
+            router.push('/login')
+            }}>
+            <label className='font-semibold'>Login Host</label>
+          </Button> 
+
         </div>
       </div>
     </BaseTemplate>
